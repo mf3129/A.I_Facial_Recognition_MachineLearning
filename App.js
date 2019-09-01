@@ -36,9 +36,34 @@ class App extends Component {
       imageUrl: '',
       box: {},
       route: 'signIn',  //Keeps track of where we are on the page. We want to start on the sign in page. 
-      isSignedIn: false
+      isSignedIn: false,
+      user: {  // We are creating this to return to the user their profile. We are not going to return the password.
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+      }
     }
   }
+
+//We will be calling this function in the Register.js file but, since we believe this information would be needed by the overall app, we have placed the function here.
+  loadUser = (data) => {
+    this.setState({ user: { //Setting the user property
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      entries: data.entries,
+      joined: data.joined
+    }})
+  }
+
+  // Connecting to front end - Need to commmunicate witht the backend of the app. 
+  // componentDidMount() {
+  //   fetch('http://localhost:3002/')
+  //     .then(response => response.json())
+  //     .then(data => console.log(data))
+  // }
 
   calculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box; //What we used to originally print the values to the console.log
@@ -97,7 +122,7 @@ class App extends Component {
        { route === 'home' 
        ? <div>
           <Logo />
-          <Rank />
+          <Rank loadUser ={this.loadUser}/>
           <ImageLinkForm 
               onInputChange={this.onInputChange} 
               onSubmit={this.onSubmit}
@@ -110,7 +135,7 @@ class App extends Component {
        : (
          this.state.route === 'signIn' 
          ? <SignIn onRouteChange={this.onRouteChange}/>
-         : <Register onRouteChange={this.onRouteChange}/>
+         : <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser}/>
        )
        
        }
