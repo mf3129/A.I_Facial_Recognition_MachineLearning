@@ -6,7 +6,7 @@ const knex = require('knex');
 
 
 //Here we are using knex to connect the sever to the database which we have achieved through teh postgres constant.
-const postgres = knex({
+const db = knex({
     client: 'pg',
     connection: {
     host: '127.0.0.1', // Since we are operating on the local host, this numbr represent the local host. 
@@ -16,13 +16,12 @@ const postgres = knex({
   }
 });
 
-console.log(postgres.select('*').from('users')); 
-
-
-
-
-
-
+//What db does is it logs all the information we need based on the request which you can see is in sql form
+/*
+db.select('*').from('users').then(data => {    //We get back data but since we do not have to do json on data since we are not sending it through http. We are using SQL to interact with the database
+    console.log(data);
+});
+*/
 
 
 const app = express();
@@ -58,15 +57,20 @@ app.post('/signin', (req, res) => {
 app.post('/register', (req, res) => {
     const { email, name, password } = req.body; //Grabs data from user input on PostMan
 
-    database.users.push({
-        id: '125',
-        name: name,
-        email: email,
-        entries: 0,
-        joined: new Date()
+    db('users')
+        .returning('*')
+        .insert({
+            email: email,
+            name: name,
+            joined: new Date()
     })
-    res.json(database.users[database.users.length - 1]) //Grabs last item in database array of new customer
+        .then(user => {
+            res.json(user[0]) 
+        })
+        .catch(err => res.status(400).json('Unable to register'))
 })
+
+
 
 
 //GET the user for their homepage
