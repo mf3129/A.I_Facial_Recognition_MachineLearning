@@ -1,30 +1,35 @@
 const express = require('express');
 const bodyParser = require('body-parser')
 const bcrypt = require('bcrypt-nodejs');
- 
+const cors = require('cors');
+const knex = require('knex');
+
+
+//Here we are using knex to connect the sever to the database which we have achieved through teh postgres constant.
+const postgres = knex({
+    client: 'pg',
+    connection: {
+    host: '127.0.0.1', // Since we are operating on the local host, this numbr represent the local host. 
+    user: 'makanfofana',
+    password: '',
+    database: 'facialrecognition'
+  }
+});
+
+console.log(postgres.select('*').from('users')); 
+
+
+
+
+
+
+
+
 const app = express();
 app.use(bodyParser.json());
+app.use(cors()); 
 
-const database = {
-    users: [
-        {
-            id: '123',
-            name: 'John',
-            email: 'john@gmail.com',
-            password: 'cookies',
-            entries: 0,
-            joined: new Date()
-        },
-        {
-            id: '124',
-            name: 'Sallly',
-            email: 'sally@gmail.com',
-            password: 'bananas',
-            entries: 0,
-            joined: new Date()
-        }
-    ]
-}
+//Express calls back to the front end
 
 
 app.get('/', (req, res)=> {
@@ -42,7 +47,7 @@ app.post('/signin', (req, res) => {
     });
     if (req.body.email === database.users[0].email 
         && req.body.password === database.users[0].password) {
-            res.json('success');
+            res.json(database.users[0]);
     } else {
         res.status(400).json('error logging in'); 
     }
@@ -51,13 +56,12 @@ app.post('/signin', (req, res) => {
 //Creating the register
 
 app.post('/register', (req, res) => {
-    const { email, name, password} = req.body; //Grabs data from user input on PostMan
+    const { email, name, password } = req.body; //Grabs data from user input on PostMan
 
     database.users.push({
         id: '125',
         name: name,
         email: email,
-        password: password,
         entries: 0,
         joined: new Date()
     })
@@ -104,8 +108,8 @@ app.put('/image', (req, res) => {
 // });
 
 
-app.listen(3000, ()=> {
-    console.log('app is running on port 3000'); 
+const port = process.env.PORT || 3002; 
+app.listen(port, ()=> { console.log(`app is running on port ${port}`); 
 })
 
 
@@ -119,4 +123,32 @@ app.listen(3000, ()=> {
 /profile/:userId --> GET = user
 /image --> PUT --> user
 
+*/
+
+
+
+
+
+
+/* No longer using the hard coded database
+const database = {
+    users: [
+        {
+            id: '123',
+            name: 'John',
+            email: 'john@gmail.com',
+            password: 'cookies',
+            entries: 0,
+            joined: new Date()
+        },
+        {
+            id: '124',
+            name: 'Sallly',
+            email: 'sally@gmail.com',
+            password: 'bananas',
+            entries: 0,
+            joined: new Date()
+        }
+    ]
+}
 */
