@@ -77,16 +77,18 @@ app.post('/register', (req, res) => {
 
 app.get('/profile/:id', (req, res) => {
     const { id } = req.params; 
-    let found = false; 
-    database.users.forEach(user => {
-        if (user.id === id) {
-            found = true; 
-            return res.json(user); 
-        } 
-    })
-    if (!found) {
-        res.status(400).json('not found'); 
-    }
+    db.select('*').from('users').where({ id: id }) //Found this where property in the knex document.
+        .then(user => {
+            if (user.length) { //This determines whether the user.length is greater than zero and if it is and empty array, print an error  
+                res.json(user[0]);
+            } else {
+                res.status(400).json('Not found')
+            }
+        }) 
+    .catch(err => res.status(400).json('Error getting user'))
+   // if (!found) {
+   //     res.status(400).json('not found'); 
+   //  }
 })
 
 //Entries count
