@@ -39,9 +39,6 @@ npm install node.js
   - [x] Modelization: Facial Scans
   - [x] Support URL Requests for Images
   - [x] Response Parsing
-  - [ ] Support base 64 Requests for Images
-  - [ ] Support of multiple inputs (max 128)
-  - [ ] Modelization: Frame
 - [ ] Search
-  - [ ] Search by image
+  - [ ] Search by Image
 
