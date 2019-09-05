@@ -5,6 +5,9 @@ const cors = require('cors');
 const knex = require('knex');
 
 
+//Importing the file for the individual request
+const image = require('./controllers/image');
+
 //Here we are using knex to connect the sever to the database which we have achieved through teh postgres constant.
 const db = knex({
     client: 'pg',
@@ -28,6 +31,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors()); 
 
+app.put('/image', (req, res) => {image.handleImage(req, res, db)})
+app.post('/imageurl', (req, res) => {image.handleApiCall(req, res)})
+
 //Express calls back to the front end
 
 
@@ -37,14 +43,18 @@ app.get('/', (req, res)=> {
 
 //Creating the Sign In
 app.post('/signin', (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {  //Using this to validate wheter the email name or password feilds are blank
+        return res.status(400).json('Incorrect Submission');
+    }
     db.select('email', 'hash').from('login')
-       .where('email', '=', req.body.email)
+       .where('email', '=', email)
        .then(data => {
         const isValid = bcrypt.compareSync(req.body.password, data[0].hash); //COmparing the password sent in the body of the sign in page with the one sen tin the body of the 
            if (isValid) {
                //console.log(isValid);
                return db.select('*').from('users')
-                   .where('email', '=', req.body.email)
+                   .where('email', '=', email)
                    .then(user => {
                       // console.log(user);
                        res.json(user[0])
@@ -65,6 +75,9 @@ app.post('/signin', (req, res) => {
 //Creating the register
 app.post('/register', (req, res) => {
     const { email, name, password } = req.body; //Grabs data from user input on PostMan
+    if (!email || !name || !password) {  //Using this to validate wheter the email name or password feilds are blank
+        return res.status(400).json('Incorrect Submission');
+    }
     const hash = bcrypt.hashSync(password); //Turning password into hash
     db.transaction(trx => {  //Here we are creating a transaction so that we can load data into the login table as well. I f we can not log in the data into the login table and the users table, the transaction fails and this prevents in cosnistencies in our database.
         trx.insert({  
@@ -110,23 +123,11 @@ app.get('/profile/:id', (req, res) => {
     .catch(err => res.status(400).json('Error getting user'))
 })
 
-//Entries count
-
-app.put('/image', (req, res) => {
-    const { id } = req.body; 
-    db('users').where('id', '=', id)
-        .increment('entries', 1)  //Incrmenting the entries by 1
-        .returning('entries')
-        .then(entries => {
-            res.json(entries[0]);
-        })
-        .catch(err => res.status(400).json('unable to get entries'))
-})
 
 
-// bcrypt.hash(password, null, null, function(err, hash) {
-//     console.log(hash); //A has function takes a string(password) and jumbles it up. It is one way.
-// });
+
+
+
 
 
 const port = process.env.PORT || 3002; 
