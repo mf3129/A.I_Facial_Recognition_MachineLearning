@@ -1,68 +1,69 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Facial Recognition Machine Learning
 
-## Available Scripts
+This gem aims to be a Clarifai APIv2 wrapper that is complete, tested and covered.
 
-In the project directory, you can run:
+[![Build Status](https://travis-ci.org/kbogtob/eclaircir.svg?branch=master)](https://travis-ci.org/kbogtob/eclaircir)
+[![Coverage Status](https://coveralls.io/repos/github/kbogtob/eclaircir/badge.svg?branch=master)](https://coveralls.io/github/kbogtob/eclaircir?branch=master)
 
-### `npm start`
+## Install
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```sh
+gem install eclaircir
+```
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## Requirements
+* Ruby 2.0.0 or higher
+* HTTParty
+* Virtus
 
-### `npm test`
+## Examples
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+...
 
-### `npm run build`
+## Contributing
+* Fork the project
+* Run `bundle install --path .bundle`
+* Run `bundle exec rake spec`
+* Add tests for your feature (the TDD way!)
+* Implement your feature
+* Run tests again
+* Commit (excluding the `Rakefile` or the `Version.rb` if you want to be merged)
+* Send a pull request
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## How can I help?
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+The Roadmap for V1 is to provide a completely usable API wrapper to do common tasks on Clarifai.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Here's an extract from the TODO:
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+# V1.0
+- [x] Authentication
+  - [x] API Key Management
+  - [x] Authorization
+- [x] Status Management
+  - [x] Modelization: Response
+  - [x] Modelization: Status
+  - [x] Modelization: Output
+  - [x] General Errors
+  - [x] Specific Errors
+  - [ ] Fully manage statuses using the statuses cheatsheet
+  - [x] Response Parsing
+- [x] Predict
+  - [x] Modelization: Input
+  - [x] Modelization: Data
+  - [x] Modelization: Concept
+  - [x] Modelization: Model
+  - [x] Support URL Requests for Images
+  - [x] Response Parsing
+  - [ ] Support base 64 Requests for Images
+  - [ ] Support of multiple inputs (max 128)
+  - [ ] Modelization: Frame
+  - [ ] Video support
+- [ ] Search
+  - [ ] Add Images to search index
+  - [ ] Search by concept
+  - [ ] Search by image
+- [ ] Train
+  - [ ] Add image with concepts
+  - [ ] Model Creation
+  - [ ] Model Training
