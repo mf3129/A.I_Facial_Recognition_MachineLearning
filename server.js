@@ -37,36 +37,58 @@ app.get('/', (req, res)=> {
 
 //Creating the Sign In
 app.post('/signin', (req, res) => {
-    // Load hash from your password DB.
-    bcrypt.compare("apples", '$2a$10$F7jDxNMx7hwCQua5Kr0aUu5og4qvRbEIyvynfY8UvOuec88DAN8SG', function(err, res) {
-        console.log('first guess', res)
-    });
-    bcrypt.compare("veggies", '$2a$10$F7jDxNMx7hwCQua5Kr0aUu5og4qvRbEIyvynfY8UvOuec88DAN8SG', function(err, res) {
-        console.log('second guess', res)
-    });
-    if (req.body.email === database.users[0].email 
-        && req.body.password === database.users[0].password) {
-            res.json(database.users[0]);
-    } else {
-        res.status(400).json('error logging in'); 
-    }
+    db.select('email', 'hash').from('login')
+       .where('email', '=', req.body.email)
+       .then(data => {
+        const isValid = bcrypt.compareSync(req.body.password, data[0].hash); //COmparing the password sent in the body of the sign in page with the one sen tin the body of the 
+           if (isValid) {
+               //console.log(isValid);
+               return db.select('*').from('users')
+                   .where('email', '=', req.body.email)
+                   .then(user => {
+                      // console.log(user);
+                       res.json(user[0])
+                   })
+                   .catch(err => res.status(400).json('unable to get user'))
+           } else {
+               res.status(400).json('wrong credentials')
+           }
+
+  
+
+        })
+        .catch(err => res.status(400).json('wrong credentials'))
 })
 
-//Creating the register
 
+
+//Creating the register
 app.post('/register', (req, res) => {
     const { email, name, password } = req.body; //Grabs data from user input on PostMan
-
-    db('users')
-        .returning('*')
-        .insert({
-            email: email,
-            name: name,
-            joined: new Date()
-    })
-        .then(user => {
-            res.json(user[0]) 
+    const hash = bcrypt.hashSync(password); //Turning password into hash
+    db.transaction(trx => {  //Here we are creating a transaction so that we can load data into the login table as well. I f we can not log in the data into the login table and the users table, the transaction fails and this prevents in cosnistencies in our database.
+        trx.insert({  
+            hash: hash,
+            email: email
         })
+        .into('login')
+        .returning('email')
+        .then(loginEmail => {
+            return trx('users')
+                .returning('*')
+                .insert({
+                    email: loginEmail[0],
+                    name: name,
+                    joined: new Date()
+            })
+                .then(user => {
+                    res.json(user[0]) 
+                })
+            })
+            .then(trx.commit)   //If the transactions suceed, then we should commit the changes
+            .catch(trx.rollback) //In case anything fails, we roll bakc the changes
+
+    })
         .catch(err => res.status(400).json('Unable to register'))
 })
 
@@ -86,26 +108,19 @@ app.get('/profile/:id', (req, res) => {
             }
         }) 
     .catch(err => res.status(400).json('Error getting user'))
-   // if (!found) {
-   //     res.status(400).json('not found'); 
-   //  }
 })
 
 //Entries count
 
 app.put('/image', (req, res) => {
     const { id } = req.body; 
-    let found = false; 
-    database.users.forEach(user => {
-        if (user.id === id) {
-            found = true; 
-            user.entries++; 
-            return res.json(user.entries); 
-        } 
-    })
-    if (!found) {
-        res.status(400).json('not found'); 
-    }
+    db('users').where('id', '=', id)
+        .increment('entries', 1)  //Incrmenting the entries by 1
+        .returning('entries')
+        .then(entries => {
+            res.json(entries[0]);
+        })
+        .catch(err => res.status(400).json('unable to get entries'))
 })
 
 
