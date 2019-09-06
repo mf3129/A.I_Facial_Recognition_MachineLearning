@@ -33,12 +33,11 @@ npm install node.js
   - [x] Modelization: Output
   - [x] General Errors
   - [x] Specific Errors
-  - [ ] Fully manage statuses using the statuses cheatsheet
   - [x] Response Parsing
 - [x] Predict
   - [x] Modelization: Facial Scans
   - [x] Support URL Requests for Images
   - [x] Response Parsing
-- [ ] Search
-  - [ ] Search by Image
+- [x] Search
+  - [x] Search by Image
 
