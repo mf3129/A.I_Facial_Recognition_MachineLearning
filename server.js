@@ -8,14 +8,16 @@ const knex = require('knex');
 //Importing the file for the individual request
 const image = require('./controllers/image');
 
-//Here we are using knex to connect the sever to the database which we have achieved through teh postgres constant.
+//Here we are using knex to connect the sever to the database which we have achieved through the original postgres constant.
 const db = knex({
     client: 'pg',
     connection: {
-    host: '127.0.0.1', // Since we are operating on the local host, this numbr represent the local host. 
-    user: 'makanfofana',
-    password: '',
-    database: 'facialrecognition'
+    connectionString : process.env.DATABASE_URL,
+    ssl: true
+    // host: 'postgresql-reticulated-42385', // Since we are operating on the local host, this number represents the local host. 
+    // user: 'makanfofana',
+    // password: '',
+    // database: 'facialrecognition'
   }
 });
 
@@ -37,9 +39,7 @@ app.post('/imageurl', (req, res) => {image.handleApiCall(req, res)})
 //Express calls back to the front end
 
 
-app.get('/', (req, res)=> {
-    res.send(database.users);
-})
+app.get('/', (req, res)=> {res.send('It is working');})
 
 //Creating the Sign In
 app.post('/signin', (req, res) => {

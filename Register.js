@@ -30,7 +30,7 @@ class Register extends React.Component  {
         //console.log(this.state)
 
         //Sending email and password information to the server
-        fetch('http://localhost:3002/register', {
+        fetch('https://aqueous-waters-90089.herokuapp.com/register', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify( {   //Body will contain what we have in the state. We cant just send javascript to backend. We must turn it into json using stringify and then send it to the backend. 
@@ -40,8 +40,8 @@ class Register extends React.Component  {
             })
         })
         .then(response => response.json())
-        .then(user => {
-            if (user) {
+        .then(user => {           //Checking to see if the user.id exist
+            if (user.id) {
             this.props.loadUser(user)
             this.props.onRouteChange('home');
             }
@@ -74,7 +74,7 @@ class Register extends React.Component  {
                         </div>
                         </fieldset>
                         <div className="">
-                            <input onClick={this.onSubmitSignIn} className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" type="submit" value="Sign in"/>
+                            <input onClick={this.onSubmitSignIn} className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" type="submit" value="Register"/>
                         </div>
                     </div>
                 </main>

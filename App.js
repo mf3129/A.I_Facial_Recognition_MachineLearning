@@ -1,6 +1,5 @@
 import React, { Component }from 'react';
 import Particles from 'react-particles-js';
-import Clarifai from 'clarifai';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
@@ -10,10 +9,6 @@ import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
 import './App.css';
 
-
-const app = new Clarifai.App({
-  apiKey: '2da27a51a75a4bde873e7a4c051ea9a1'
- });
 
 const particlesOptions = {
     particles: {
@@ -27,11 +22,7 @@ const particlesOptions = {
     }
 }
 
-class App extends Component {
-
-  constructor() {
-    super();
-    this.state = {
+const initialState = {
       input: '',
       imageUrl: '',
       box: {},
@@ -44,7 +35,13 @@ class App extends Component {
         entries: 0,
         joined: ''
       }
-    }
+}
+
+class App extends Component {
+
+  constructor() {
+    super();
+    this.state = initialState; 
   }
 
 //We will be calling this function in the Register.js file but, since we believe this information would be needed by the overall app, we have placed the function here.
@@ -80,6 +77,9 @@ class App extends Component {
   }
 
 
+
+
+
   displayFaceBox = (box) => {
     console.log(box);
     this.setState({box: box})
@@ -92,36 +92,41 @@ class App extends Component {
 
   onSubmit = () => {
     this.setState({imageUrl: this.state.input});
-    app.models
-      .predict(
-      Clarifai.FACE_DETECT_MODEL,
-      this.state.input)
-        .then(response => {
-            if (response) {
-                fetch('http://localhost:3002/image', { //Server and front end are connecting through fetch method to create amazing things.
-                    method: 'put',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({   //Body will contain what we have in the state. We cant just send javascript to backend. We must turn it into json using stringify and then send it to the backend. 
-                       id: this.state.user.id
-                    })
-                })
-                    .then(response => response.json())
-                    .then(count => {
-                        this.setState(Object.assign(this.state.user, {entries: count})) //Here we are updating the value of entries of the user
-                    })
+            fetch('https://aqueous-waters-90089.herokuapp.com/imageurl', { //Server and front end are connecting through fetch method to create amazing things.
+                 method: 'post',
+                 headers: { 'Content-Type': 'application/json' },
+                 body: JSON.stringify({   //Body will contain what we have in the state. We cant just send javascript to backend. We must turn it into json using stringify and then send it to the backend. 
+                    input: this.state.input
+                 })
+            })
+              .then(response => response.json())
+              .then(response => {
+                    if (response) {
+                        fetch('https://aqueous-waters-90089.herokuapp.com/image', { //Server and front end are connecting through fetch method to create amazing things.
+                            method: 'put',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({   //Body will contain what we have in the state. We cant just send javascript to backend. We must turn it into json using stringify and then send it to the backend. 
+                               id: this.state.user.id
+                            })
+                        })
+                            .then(response => response.json())
+                            .then(count => {
+                                this.setState(Object.assign(this.state.user, {entries: count})) //Here we are updating the value of entries of the user
+                            })
+                            .catch(console.log) //It is good practice to have a .catch method after any las .then or after a fetch statement
 
 
-            }
-            this.displayFaceBox(this.calculateFaceLocation(response))
-        })   
-      .catch(err => console.log(err));
+                    }
+                    this.displayFaceBox(this.calculateFaceLocation(response))
+                })   
+              .catch(err => console.log(err));
   }
 
 
 
   onRouteChange = (route) => {
     if (route === 'signOut') {
-      this.setState({isSignedIn: false})
+      this.setState(initialState)
     } else if (route === "home") {
       this.setState({isSignedIn: true})
     }
