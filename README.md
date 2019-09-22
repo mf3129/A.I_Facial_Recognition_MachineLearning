@@ -27,6 +27,21 @@ npm install node.js
 - [x] Authentication
   - [x] API Key Management
   - [x] Authorization
+- [x] Front End
+  - [x] Components created through React.js
+  - [x] URL section for image url upload
+  - [x] Incrementation of submisison total count
+- [x] User Login Authentication
+  - [x] Login Verification
+- [x] Server
+  - [x] Implementation of postgres database using Knex.js
+  - [x] Creation of endpoints and fetch request using Express.js
+  - [x] Connect to database from server
+  - [x] Encyrption of stored password using bcrypt-node.js
+- [x] Database
+  - [x] Storing login information
+  - [x] Implementation of postgres database
+  - [x] Connect to database from server 
 - [x] Status Management
   - [x] Modelization: Response
   - [x] Modelization: Status
@@ -38,6 +53,5 @@ npm install node.js
   - [x] Modelization: Facial Scans
   - [x] Support URL Requests for Images
   - [x] Response Parsing
-- [x] Search
-  - [x] Search by Image
+
 
