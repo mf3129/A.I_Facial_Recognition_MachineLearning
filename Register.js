@@ -2,7 +2,7 @@ import React from 'react';
 
 class Register extends React.Component  {
 
-    constructor(props) { //In order to use props like this.props below, we must pass through props as an argument in the constructor and super
+    constructor(props) { 
         super(props); 
         this.state = {
             email: '',
@@ -27,13 +27,10 @@ class Register extends React.Component  {
 
 
     onSubmitSignIn = () => {
-        //console.log(this.state)
-
-        //Sending email and password information to the server
         fetch('https://aqueous-waters-90089.herokuapp.com/register', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify( {   //Body will contain what we have in the state. We cant just send javascript to backend. We must turn it into json using stringify and then send it to the backend. 
+            body: JSON.stringify( {
                 email: this.state.email,
                 password: this.state.password,
                 name: this.state.name
@@ -51,8 +48,6 @@ class Register extends React.Component  {
 
 
     render() {
-
-        //const { onRouteChange } = this.props;
 
         return (
             <article className="br3 ba dark-gray b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
