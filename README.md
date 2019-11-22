@@ -2,6 +2,12 @@
 
 This projects implements the Clarifai Artificial Intelligence API to detect faces in images & constructed login authentication on backend. It is currently be hosted on Heroku at (https://facial-recognition-ml.herokuapp.com)
 
+# 
+
+![Screen Shot 2019-11-22 at 5 22 27 PM](https://user-images.githubusercontent.com/43025563/69464611-bdba4c00-0d4c-11ea-9b0d-ac9937b762ec.png)
+
+![Screen Shot 2019-11-22 at 5 20 33 PM](https://user-images.githubusercontent.com/43025563/69464543-982d4280-0d4c-11ea-845e-4b169b5820b8.png)
+
 
 # V1.0
 - [x] Authentication
