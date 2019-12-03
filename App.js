@@ -26,9 +26,9 @@ const initialState = {
       input: '',
       imageUrl: '',
       box: {},
-      route: 'signIn',  //Keeps track of where we are on the page. We want to start on the sign in page. 
+      route: 'signIn', 
       isSignedIn: false,
-      user: {  // We are creating this to return to the user their profile. We are not going to return the password.
+      user: { 
         id: '',
         name: '',
         email: '',
@@ -44,9 +44,9 @@ class App extends Component {
     this.state = initialState; 
   }
 
-//We will be calling this function in the Register.js file but, since we believe this information would be needed by the overall app, we have placed the function here.
+
   loadUser = (data) => {
-    this.setState({ user: { //Setting the user property
+    this.setState({ user: { 
       id: data.id,
       name: data.name,
       email: data.email,
@@ -54,16 +54,10 @@ class App extends Component {
       joined: data.joined
     }})
   }
-
-  // Connecting to front end - Need to commmunicate witht the backend of the app. 
-  // componentDidMount() {
-  //   fetch('http://localhost:3002/')
-  //     .then(response => response.json())
-  //     .then(data => console.log(data))
-  // }
+  
 
   calculateFaceLocation = (data) => {
-    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box; //What we used to originally print the values to the console.log
+    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box; 
     const image = document.getElementById('inputimage');
     const width = Number(image.width);   
     const height = Number(image.height);
@@ -92,28 +86,28 @@ class App extends Component {
 
   onSubmit = () => {
     this.setState({imageUrl: this.state.input});
-            fetch('https://aqueous-waters-90089.herokuapp.com/imageurl', { //Server and front end are connecting through fetch method to create amazing things.
+            fetch('https://aqueous-waters-90089.herokuapp.com/imageurl', { 
                  method: 'post',
                  headers: { 'Content-Type': 'application/json' },
-                 body: JSON.stringify({   //Body will contain what we have in the state. We cant just send javascript to backend. We must turn it into json using stringify and then send it to the backend. 
+                 body: JSON.stringify({  
                     input: this.state.input
                  })
             })
               .then(response => response.json())
               .then(response => {
                     if (response) {
-                        fetch('https://aqueous-waters-90089.herokuapp.com/image', { //Server and front end are connecting through fetch method to create amazing things.
+                        fetch('https://aqueous-waters-90089.herokuapp.com/image', { 
                             method: 'put',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({   //Body will contain what we have in the state. We cant just send javascript to backend. We must turn it into json using stringify and then send it to the backend. 
+                            body: JSON.stringify({  
                                id: this.state.user.id
                             })
                         })
                             .then(response => response.json())
                             .then(count => {
-                                this.setState(Object.assign(this.state.user, {entries: count})) //Here we are updating the value of entries of the user
+                                this.setState(Object.assign(this.state.user, {entries: count})) 
                             })
-                            .catch(console.log) //It is good practice to have a .catch method after any las .then or after a fetch statement
+                            .catch(console.log) 
 
 
                     }
@@ -142,7 +136,7 @@ class App extends Component {
     return (
       <div className="App">
         <Particles className='particles' 
-                params={particlesOptions}  //Wrapping in curly brackets makes this a javascript expression so that we can write if else statement for the route
+                params={particlesOptions}  
         />             
        <Navigation isSignedIn ={isSignedIn} onRouteChange={this.onRouteChange}/>   
        { route === 'home' 
